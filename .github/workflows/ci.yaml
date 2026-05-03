@@ -1,4 +1,4 @@
-name: Verification du Projet Book
+name: Verification du Projet projet-1
 # Quand doit-il travailler ?
 on: [push] # Dès que tu envoies du code sur Github
 # Qu'est-ce qu'il doit faire ?
