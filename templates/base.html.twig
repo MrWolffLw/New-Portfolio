@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<link rel="stylesheet" href="{{asset('css/app.css')}}"> {% block stylesheets %}{% endblock %}
+		<title>Document</title>
+	</head>
+	<body>
+		<title>
+			{% block titre %}
+				Développeur - Web Junior
+			{% endblock %}
+		</title>
+		<header>
+			<nav class="nav">
+				<div class="nav-logo">
+					<a href="/" style="text-decoration: none; background: none; color: black;">Cédric Pélisson</a>
+				</div>
+				<div class="nav-links">
+					
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="/admin" style="color: white; padding:2px;">Admin</a>
+					{% endif %}
+				</div>
+				<a class="nav-cta" href="/contact">Contact</a>
+
+			</nav>
+		</header>
+
+
+		{% block body %}{% endblock %}
+
+		<footer>
+			&copy; 2026 Pélisson Cédric</footer>
+	</body>
+</html>

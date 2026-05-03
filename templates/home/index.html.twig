@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Portfolio
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+	<body>
+
+
+		<div class="hero">
+			<div class="hero-badge">
+				<div class="badge-dot"></div>
+				Disponible pour des opportunités
+			</div>
+			<h1>Developpeur
+				<br>
+				<span>Web junior</span>
+			</h1>
+			<p class="hero-sub">Création de sites internet avec symfony.</p>
+			<div class="hero-actions">
+				{# <div class="btn-primary">Voir mes projets</div> #}
+				<div class="btn-secondary"><a href="{{ asset('uploads/cv-pelisson-cedric.pdf') }}" style="background: none; color: #0071E3 ;">Voir mon CV</a></div>
+			</div>
+		</div>
+
+		<section>
+			<div class="section-label">Technologies maitrisées</div>
+
+
+			<div class="skills-grid">
+				{% for competence in competences %}
+					<div class="skill-card">
+						
+
+							{% if is_granted('ROLE_ADMIN') %}
+								{# <a href="/admin">Admin</a> #}
+								<button class='edit-btn'>
+									<a href="{{ path('competences_edit', {id: competence.id}) }}">Edit</a>
+								</button>
+							{% endif %}
+						
+						<div class="skill-icon">
+
+							<img src="{{ asset('uploads/' ~ competence.icone) }}" alt="" class="img-form">
+						</div>
+						<div class="skill-name">
+							{{ competence.titre }}
+						</div>
+						<div class="skill-level">
+							{{ competence.niveau}}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<br>
+			{% if is_granted('ROLE_ADMIN') %}
+				{# <a href="/admin">Admin</a> #}
+				<div class="btn-ajouter">
+					<a href="/competences" class="text-ajouter">Ajouter une technologie</a>
+				</div>
+			{% endif %}
+
+
+		</section>
+
+		<section>
+
+
+			<div class="section-label">Projets récents</div>
+
+			<div class="project-grid">
+				{% for projet in projets %}
+					<div class="project-card">
+						<div class="project-img">
+							<img src="{{ asset('uploads/' ~ projet.image) }}" alt="" class='img-projet'></div>
+						{% if is_granted('ROLE_ADMIN') %}
+							{# <a href="/admin">Admin</a> #}
+							<button class='edit-btn'>
+								<a href="{{ path('projets_edit', {id: projet.id}) }}">Edit</a>
+							</button>
+						{% endif %}
+						<div class="project-body">
+							<div class="project-tags">
+								<span class="tag">{{ projet.tags }}</span>
+							</div>
+							<div class="project-title">
+								{{ projet.titre }}
+							</div>
+							<div class="project-desc">
+								{{ projet.description }}
+							</div>
+							<div class="project-link">Voir le projet</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<br>
+			{% if is_granted('ROLE_ADMIN') %}
+				{# <a href="/admin">Admin</a> #}
+				<a href="{{ path('projets_new') }}" class="btn-ajouter">
+					Ajouter un projet
+				</a>
+			{% endif %}
+		</section>
+
+		<section>
+    <div class="section-label">Mon parcours</div>
+
+    <div class="exp-list">
+
+        {% for parc in parcours %}
+
+            <div class="exp-item">
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="edit-btn" href="{{ path('app_parcours_edit', {id: parc.id}) }}">
+                        edit
+                    </a>
+                {% endif %}
+
+                {# <div class="exp-icon">?</div> #}
+
+                <div class="form-exp">
+                    <div class="exp-titre">{{ parc.titre }}</div>
+                    <div class="exp-company">{{ parc.entreprise }}</div>
+                    <div class="exp-company">{{ parc.description }}</div>
+                    <div class="exp-date">Début
+                        {{ parc.createdAt|date('d/m/Y') }}
+                    </div>
+                    <div class="exp-date">Fin
+                        {{ parc.endedAt|date('d/m/Y') }}
+                    </div>
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="btn-ajouter">
+            <a href="/parcours/new" class="text-ajouter">Ajouter une expérience</a>
+        </div>
+    {% endif %}
+</section>
+
+		<section style="padding-bottom: 100px;">
+
+			<div class="contact-card">
+				<div class="contact-title">Travaillons ensemble</div>
+				<div class="contact-sub">Ouvert à des opportunité de CDI - CDD</div>
+				<div class="contact-links">
+					<div class="contact-link">pelisson.cedric@gmail.com</div>
+					<div class="contact-link">
+						<a href="" style="color: white;  background: transparent;">LinkedIn</a>
+					</div>
+					<div class="contact-link"></div>
+				</div>
+			</div>
+
+
+		</section>
+	</body>
+{% endblock %}

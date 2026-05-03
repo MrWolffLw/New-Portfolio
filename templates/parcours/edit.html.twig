@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+<div class="label-titre">
+		{{ form_label(form.titre, null, {label_attr:{'class':'form-label'}}) }}
+		{{ form_widget(form.titre, {attr:{'class':'form-input'}})}}
+
+	</div>
+<div class="label-titre">
+		{{ form_label(form.entreprise, null, {label_attr:{'class':'form-label'}}) }}
+		{{ form_widget(form.entreprise, {attr:{'class':'form-input'}})}}
+
+	</div>
+
+	<div class="label-desc">
+		{{ form_label(form.description, null, {label_attr:{'class':'form-label'}}) }}
+		{{ form_widget(form.description, {attr:{'class':'form-input'}})}}
+
+	</div>
+
+<div class="label-tags">
+		{{ form_row(form.createdAt, {label_attr:{'class':'form-label'}}) }}
+	</div>
+	<div class="label-tags">
+		{{ form_row(form.endedAt, {label_attr:{'class':'form-label'}}) }}
+		
+
+	</div>
+<button class="btn-form">Modifier</button>
+
+{{ form_end(form) }}
+
+{% endblock %}

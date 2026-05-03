@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	{% if is_granted('ROLE_ADMIN') %}
+	<h1 style="color: white;">Register</h1>
+
+    {{ form_start(registrationForm) }}
+
+
+	<div class="label-desc">
+		{{ form_label(registrationForm.email, null, {label_attr:{'class':'form-label'}}) }}
+		{{ form_widget(registrationForm.email, {attr:{'class':'form-input'}})}}
+
+	</div>
+
+	<div class="label-tags">
+		{{ form_label(registrationForm.plainPassword, null, {label_attr:{'class':'form-label'}}) }}
+		{{ form_widget(registrationForm.plainPassword, {attr:{'class':'form-input'}})}}
+
+	</div>
+
+	<div class="label-tags">
+		{{ form_row(registrationForm.agreeTerms, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+	</div>
+	<br>
+
+	<button type="submit" class="btn-form">register</button>
+
+
+	
+	{% endif %}
+{% endblock %}
