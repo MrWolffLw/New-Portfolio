@@ -1,0 +1,94 @@
+name: CI Symfony
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  symfony:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      # 1. Récupérer le code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Installer PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, intl, pdo_mysql
+          coverage: none
+
+      # 3. Installer Composer
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      # 4. Config environnement
+      - name: Setup .env
+        run: |
+          cp .env .env.local
+          echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/test_db" >> .env.local
+
+      # 5. Attendre MySQL
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping -h "127.0.0.1" --silent; do
+            sleep 2
+          done
+
+      # 6. Créer la BDD
+      - name: Create database
+        run: php bin/console doctrine:database:create --if-not-exists
+
+      # 7. Migration
+      - name: Run migrations
+        run: php bin/console doctrine:migrations:migrate --no-interaction
+
+      # 8. Vérifier le code
+      - name: PHPStan (optionnel)
+        run: |
+          if [ -f vendor/bin/phpstan ]; then
+            vendor/bin/phpstan analyse
+          fi
+
+      # 9. Lancer tests (si tu en as)
+      - name: Run tests
+        run: |
+          if [ -f bin/phpunit ]; then
+            php bin/phpunit
+          fi
+  deploy:
+    needs: symfony
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd /var/www/ton-projet
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+            php bin/console doctrine:migrations:migrate --no-interaction
+            php bin/console cache:clear
