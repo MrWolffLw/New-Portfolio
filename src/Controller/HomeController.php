@@ -12,7 +12,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class HomeController extends AbstractController
 {
-    #[IsGranted('ROLE_ADMIN')]
+    // #[IsGranted('ROLE_ADMIN')]
      #[Route('/', name: 'home')]
     public function index(ProjetsRepository $repo, CompetencesRepository $competences, ParcoursRepository $parc): Response
     {

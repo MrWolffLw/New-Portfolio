@@ -55,4 +55,10 @@ class LoginformAuthenticator extends AbstractLoginFormAuthenticator
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
+
+    public function supports(Request $request): bool
+    {
+        return $request->attributes->get('_route') === 'app_login'
+            && $request->isMethod('POST');
+    }
 }
